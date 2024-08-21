@@ -1,15 +1,23 @@
 package com.example.springbootrecap.dao.impl;
 
 import com.example.springbootrecap.domain.Book;
+import com.example.springbootrecap.domain.User;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 
-import static org.mockito.ArgumentMatchers.eq;
+import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class BookDaoImlTests {
@@ -26,14 +34,42 @@ public class BookDaoImlTests {
                 .id(1L)
                 .title("Living in Singapore")
                 .author("Emile")
-                .user_id(1L)
+                .user_id(2L)
                 .build();
 
         underTest.create(newBook);
 
         verify(template).update(
                 eq("INSERT INTO books (id, title, author, user_id) VALUES (?, ?, ?, ?)"),
-                eq(1L), eq("Living in Singapore"), eq("Emile"), eq(1L)
+                eq(1L), eq("Living in Singapore"), eq("Emile"), eq(2L)
         );
+    }
+    @Test
+    public void testThatFindsOneBook(){
+        Book mockBook = new Book(1L, "Living in Singapore", "Emile", 2L);
+
+        when(template.queryForObject(anyString(), (Object[]) any(Object[].class), (RowMapper<Object>) any())).thenReturn(mockBook);
+
+        underTest.findOne(1L);
+
+        verify(template).queryForObject(
+                eq("SELECT id, title, author, user_id FROM books WHERE id = ?"),
+                eq(new Object[]{1L}),
+                any(RowMapper.class)
+        );
+    }
+
+    @Test
+    public void testFindOneUnknownBook() {
+        // Arrange
+        Long unknownUserId = 999L;
+//        thenThrow(new EmptyResultDataAccessException(1)
+        when(template.queryForObject(anyString(), (Object[]) any(Object[].class), (RowMapper<Object>) any())).thenThrow(new EmptyResultDataAccessException(1));
+
+        // Act
+        Optional<Book> result = underTest.findOne(unknownUserId);
+
+        // Assert
+        assertFalse(result.isPresent(), "Expected an empty Optional when the user is not found.");
     }
 }
