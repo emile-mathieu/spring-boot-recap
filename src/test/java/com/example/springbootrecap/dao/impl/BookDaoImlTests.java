@@ -35,8 +35,5 @@ public class BookDaoImlTests {
                 eq("INSERT INTO books (id, title, author, user_id) VALUES (?, ?, ?, ?)"),
                 eq(1L), eq("Living in Singapore"), eq("Emile"), eq(1L)
         );
-
-
     }
-
 }
