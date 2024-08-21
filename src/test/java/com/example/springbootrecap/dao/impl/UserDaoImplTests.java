@@ -1,6 +1,5 @@
-package com.example.springbootrecap.dao;
+package com.example.springbootrecap.dao.impl;
 
-import com.example.springbootrecap.dao.impl.UserDaoImpl;
 import com.example.springbootrecap.domain.User;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
