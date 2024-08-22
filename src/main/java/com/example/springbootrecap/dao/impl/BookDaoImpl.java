@@ -3,9 +3,11 @@ package com.example.springbootrecap.dao.impl;
 import com.example.springbootrecap.dao.BookDao;
 import com.example.springbootrecap.domain.Book;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
+@Repository
 public class BookDaoImpl implements BookDao {
     private final JdbcTemplate template;
 
@@ -15,16 +17,16 @@ public class BookDaoImpl implements BookDao {
 
     public void create(Book newBook) {
         template.update(
-                "INSERT INTO books (id, title, author, user_id) VALUES (?, ?, ?, ?)",
-                newBook.getId(), newBook.getTitle(), newBook.getAuthor(), newBook.getUser_id()
+                "INSERT INTO books (title, author, user_id) VALUES (?, ?, ?)",
+                 newBook.getTitle(), newBook.getAuthor(), newBook.getUser_id()
         );
     }
 
     @Override
-    public Optional<Book> findOne(Long id) {
+    public Optional<Book> findOne(String title) {
         try{
-            Book book = template.queryForObject("SELECT id, title, author, user_id FROM books WHERE id = ?",
-                    new Object[]{id},
+            Book book = template.queryForObject("SELECT id, title, author, user_id FROM books WHERE title = ?",
+                    new Object[]{title},
                     (rs, rowNum) -> new Book(
                             rs.getLong("id"),
                             rs.getString("title"),

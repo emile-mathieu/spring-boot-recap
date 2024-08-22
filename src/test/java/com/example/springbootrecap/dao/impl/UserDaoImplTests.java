@@ -37,7 +37,7 @@ public class UserDaoImplTests {
         underTest.create(newUser); // This should now use the mocked JdbcTemplate
 
         verify(template).update(
-                eq("INSERT INTO users (id, name, email) VALUES (?, ?, ?)"),
+                eq("INSERT INTO users (id, username, email) VALUES (?, ?, ?)"),
                 eq(1L), eq("Josh"), eq("josh@example.com")
         );
     }
@@ -50,7 +50,7 @@ public class UserDaoImplTests {
         underTest.findOne(1L);
 
         verify(template).queryForObject(
-                eq("SELECT id, name, email FROM users WHERE id = ?"),
+                eq("SELECT id, username, email FROM users WHERE id = ?"),
                 eq(new Object[]{1L}),
                 any(RowMapper.class)
         );

@@ -31,7 +31,6 @@ public class BookDaoImlTests {
     @Test void testThatCreatesBookGeneratedSQL() {
         //  Prepare mock to be tested
         Book newBook = Book.builder()
-                .id(1L)
                 .title("Living in Singapore")
                 .author("Emile")
                 .user_id(2L)
@@ -40,8 +39,8 @@ public class BookDaoImlTests {
         underTest.create(newBook);
 
         verify(template).update(
-                eq("INSERT INTO books (id, title, author, user_id) VALUES (?, ?, ?, ?)"),
-                eq(1L), eq("Living in Singapore"), eq("Emile"), eq(2L)
+                eq("INSERT INTO books (title, author, user_id) VALUES (?, ?, ?)"),
+                eq("Living in Singapore"), eq("Emile"), eq(2L)
         );
     }
     @Test
@@ -50,11 +49,11 @@ public class BookDaoImlTests {
 
         when(template.queryForObject(anyString(), (Object[]) any(Object[].class), (RowMapper<Object>) any())).thenReturn(mockBook);
 
-        underTest.findOne(1L);
+        underTest.findOne("Living in Singapore");
 
         verify(template).queryForObject(
-                eq("SELECT id, title, author, user_id FROM books WHERE id = ?"),
-                eq(new Object[]{1L}),
+                eq("SELECT id, title, author, user_id FROM books WHERE title = ?"),
+                eq(new Object[]{"Living in Singapore"}),
                 any(RowMapper.class)
         );
     }
@@ -62,12 +61,12 @@ public class BookDaoImlTests {
     @Test
     public void testFindOneUnknownBook() {
         // Arrange
-        Long unknownUserId = 999L;
+        String unknownTitle = "Doesn't exist";
 //        thenThrow(new EmptyResultDataAccessException(1)
         when(template.queryForObject(anyString(), (Object[]) any(Object[].class), (RowMapper<Object>) any())).thenThrow(new EmptyResultDataAccessException(1));
 
         // Act
-        Optional<Book> result = underTest.findOne(unknownUserId);
+        Optional<Book> result = underTest.findOne(unknownTitle);
 
         // Assert
         assertFalse(result.isPresent(), "Expected an empty Optional when the user is not found.");

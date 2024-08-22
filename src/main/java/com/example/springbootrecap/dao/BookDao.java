@@ -6,5 +6,5 @@ import java.util.Optional;
 
 public interface BookDao {
     public void create(Book newBook);
-    public Optional<Book> findOne(Long id);
+    public Optional<Book> findOne(String title);
 }

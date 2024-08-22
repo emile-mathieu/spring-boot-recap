@@ -18,7 +18,7 @@ public class UserDaoImpl implements UserDao {
     @Override
     public void create(User newUser) {
         template.update(
-                "INSERT INTO users (id, name, email) VALUES (?, ?, ?)",
+                "INSERT INTO users (id, username, email) VALUES (?, ?, ?)",
                 newUser.getId(), newUser.getName(), newUser.getEmail()
         );
     }
@@ -27,12 +27,12 @@ public class UserDaoImpl implements UserDao {
     public Optional<User> findOne(Long id) {
         try {
             User user = template.queryForObject(
-                    "SELECT id, name, email FROM users WHERE id = ?",
+                    "SELECT id, username, email FROM users WHERE id = ?",
                     new Object[]{id},
                     (rs, rowNum) -> {
                         User u = new User();
                         u.setId(rs.getLong("id"));
-                        u.setName(rs.getString("name"));
+                        u.setName(rs.getString("username"));
                         u.setEmail(rs.getString("email"));
                         return u;
                     }
