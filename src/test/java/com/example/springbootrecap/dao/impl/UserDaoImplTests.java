@@ -69,4 +69,12 @@ public class UserDaoImplTests {
         // Assert
         assertFalse(result.isPresent(), "Expected an empty Optional when the user is not found.");
     }
+    @Test
+    public void findAllUsersGeneratedSql() {
+        underTest.findAll();
+        verify(template).query(
+                eq("SELECT id, username, email FROM users"),
+                any(RowMapper.class)
+        );
+    }
 }

@@ -5,6 +5,7 @@ import com.example.springbootrecap.domain.User;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -41,5 +42,21 @@ public class UserDaoImpl implements UserDao {
         } catch (Exception e) {
             return Optional.empty();
         }
+    }
+
+    @Override
+    public List<User> findAll() {
+
+        List<User> users = template.query(
+                "SELECT id, username, email FROM users",
+                (rs, rowNum) -> {
+                    User u = new User();
+                    u.setId(rs.getLong("id"));
+                    u.setName(rs.getString("username"));
+                    u.setEmail(rs.getString("email"));
+                    return u;
+                }
+        );
+        return users;
     }
 }
