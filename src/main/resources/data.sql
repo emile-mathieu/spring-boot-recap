@@ -1,3 +1,3 @@
-INSERT INTO users (username, email) VALUES
-('john_doe','john@example.com'),
-('bob_smith', 'bob@example.com');
+INSERT INTO users (id, username, email) VALUES
+(1,'john_doe','john@example.com'),
+(4,'bob_smith', 'bob@example.com');
