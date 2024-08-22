@@ -62,7 +62,7 @@ public class BookDaoImlTests {
     public void testFindOneUnknownBook() {
         // Arrange
         String unknownTitle = "Doesn't exist";
-//        thenThrow(new EmptyResultDataAccessException(1)
+        // thenThrow(new EmptyResultDataAccessException(1)
         when(template.queryForObject(anyString(), (Object[]) any(Object[].class), (RowMapper<Object>) any())).thenThrow(new EmptyResultDataAccessException(1));
 
         // Act
@@ -70,5 +70,14 @@ public class BookDaoImlTests {
 
         // Assert
         assertFalse(result.isPresent(), "Expected an empty Optional when the user is not found.");
+    }
+    @Test
+    public void testThatFindsAllBooks(){
+        underTest.findAll();
+
+        verify(template).query(
+                eq("SELECT id, title, author, user_id FROM books"),
+                any(RowMapper.class)
+        );
     }
 }

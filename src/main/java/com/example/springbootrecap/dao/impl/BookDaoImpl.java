@@ -5,6 +5,7 @@ import com.example.springbootrecap.domain.Book;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -40,4 +41,16 @@ public class BookDaoImpl implements BookDao {
         }
     }
 
+    @Override
+    public List<Book> findAll() {
+        List<Book> books = template.query("SELECT id, title, author, user_id FROM books",
+                (rs, rowNum) -> new Book(
+                        rs.getLong("id"),
+                        rs.getString("title"),
+                        rs.getString("author"),
+                        rs.getLong("user_id")
+                )
+        );
+        return books;
+    }
 }
