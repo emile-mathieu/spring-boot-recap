@@ -83,7 +83,6 @@ public class UserRepositoryIntegrationTests {
         Optional<User> userRetrieved = underTest.findById(newUser.getId());
 
         // 4. Assert that the user was updated
-        assertThat(userRetrieved).isPresent();
         assertThat(userRetrieved.get().equals(newUser));
     }
     @Test public void testUserCanBeDeleted(){

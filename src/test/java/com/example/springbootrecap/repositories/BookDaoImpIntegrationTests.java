@@ -34,7 +34,6 @@ public class BookDaoImpIntegrationTests {
         Optional<Book> bookRetrieved = underTest.findById(newBook.getId());
 
         // 2. Assert that the book was created and retrieved
-        assertThat(bookRetrieved).isPresent();
         assertThat(bookRetrieved.get().equals(newBook));
     }
     @Test
