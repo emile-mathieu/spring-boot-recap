@@ -1,5 +1,6 @@
 package com.example.springbootrecap.domain;
 
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -9,9 +10,14 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@Entity
+@Table(name = "books")
 public class Book {
+    @Id
     private Long id;
     private String title;
-    private String author;
-    private Long user_id;
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "author_id")
+    private User author;
+
 }

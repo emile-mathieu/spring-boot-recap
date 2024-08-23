@@ -1,4 +1,4 @@
-package com.example.springbootrecap.dao.impl;
+package com.example.springbootrecap.repositories;
 
 import com.example.springbootrecap.domain.User;
 import org.junit.jupiter.api.Test;
@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 
-import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -14,28 +13,27 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-public class UserDaoImpIntegrationTests {
+public class UserRepositoryIntegrationTests {
 
     @Autowired
-    private UserDaoImpl underTest;
+    private UserRepository underTest;
 
     @Test
     public void testThatUserCanBeCreatedAndRecalled() {
         // 1. Create a new user
         User newUser = User.builder()
-                .id(3)
+                .id(1L)
                 .name("Josh")
                 .email("josh@example.com")
                 .build();
-        underTest.create(newUser);
-        Optional<User> userRetrieved = underTest.findOne(1L);
+        underTest.save(newUser);
+        Optional<User> userRetrieved = underTest.findById(newUser.getId());
 
         // 2. Assert that the user was created and retrieved
         assertThat(userRetrieved).isPresent();
         assertThat(userRetrieved.get().getId()).isEqualTo(1L);
     }
     @Test public void testThatMultipleUsersCanBeRetrieved(){
-        //SQL Users
         User newUser1 = User.builder()
                 .id(1)
                 .name("john_doe")
@@ -46,8 +44,6 @@ public class UserDaoImpIntegrationTests {
                 .name("bob_smith")
                 .email("bob@example.com")
                 .build();
-
-        // Building 2 users
         User newUser3 = User.builder()
                 .id(3)
                 .name("Tom")
@@ -60,11 +56,12 @@ public class UserDaoImpIntegrationTests {
                 .build();
 
         // Creating the 2 users
-        underTest.create(newUser3);
-        underTest.create(newUser4);
-
+        underTest.save(newUser1);
+        underTest.save(newUser2);
+        underTest.save(newUser3);
+        underTest.save(newUser4);
         // 1. Retrieve all users
-        List<User> users = underTest.findAll();
+        Iterable<User> users = underTest.findAll();
         // 2. Assert that the users were retrieved successfully
         assertThat(users).hasSize(4).containsExactly(newUser1, newUser2, newUser3, newUser4);
     }
@@ -72,39 +69,33 @@ public class UserDaoImpIntegrationTests {
     public void testThatUserCanBeUpdated() {
         // 1. Create a new user
         User newUser = User.builder()
-                .id(5)
+                .id(1L)
                 .name("Josh")
                 .email("josh@example.com")
                 .build();
-        underTest.create(newUser);
+        underTest.save(newUser);
 
         // 2. Update the user
-        User updatedUser = User.builder()
-                .id(5)
-                .name("Joshua")
-                .email("joshua@example.org")
-                .build();
-
-        underTest.update(updatedUser);
+        newUser.setName("Joshua");
+        underTest.save(newUser);
 
         // 3. Retrieve the updated user
-        Optional<User> userRetrieved = underTest.findOne(5L);
+        Optional<User> userRetrieved = underTest.findById(newUser.getId());
 
         // 4. Assert that the user was updated
-
         assertThat(userRetrieved).isPresent();
-        assertThat(userRetrieved.get().getName()).isEqualTo("Joshua");
+        assertThat(userRetrieved.get().equals(newUser));
     }
     @Test public void testUserCanBeDeleted(){
         // 1. Create a new user
         User newUser = User.builder()
-                .id(6)
+                .id(1L)
                 .name("Josh")
                 .email("josh@example.com")
                 .build();
 
-        underTest.create(newUser);
-        underTest.delete(6L);
-        assertThat(underTest.findOne(6L)).isEmpty();
-        }
+        underTest.save(newUser);
+        underTest.delete(newUser);
+        assertThat(underTest.findById(newUser.getId())).isEmpty();
+    }
 }
