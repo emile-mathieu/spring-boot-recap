@@ -44,6 +44,25 @@ public class BookDaoImlTests {
         );
     }
     @Test
+    public void testThatUpdatesBookGeneratedSQL() {
+        // Arrange
+        Book book = Book.builder()
+                .id(1L)
+                .title("Living in Singapore")
+                .author("Emile")
+                .user_id(2L)
+                .build();
+
+        // Act
+        underTest.update(book);
+
+        // Assert
+        verify(template).update(
+                eq("UPDATE books SET title = ?, author = ?, user_id = ? WHERE id = ?"),
+                eq("Living in Singapore"), eq("Emile"), eq(2L), eq(1L)
+        );
+    }
+    @Test
     public void testThatFindsOneBook(){
         Book mockBook = new Book(1L, "Living in Singapore", "Emile", 2L);
 

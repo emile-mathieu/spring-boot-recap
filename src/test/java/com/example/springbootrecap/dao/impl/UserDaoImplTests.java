@@ -55,6 +55,21 @@ public class UserDaoImplTests {
                 any(RowMapper.class)
         );
     }
+    @Test void testThatUpdatesUserGeneratedSql(){
+
+        User user = User.builder()
+                .name("Emile")
+                .email("emile@example.com")
+                .id(1L)
+                .build();
+
+        underTest.update(user);
+
+        verify(template).update(
+                eq("UPDATE users SET username = ?, email = ? WHERE id = ?"),
+                eq("Emile"), eq("emile@example.com"), eq(1L)
+        );
+    }
 
     @Test
     public void testFindOneUnknownUser() {

@@ -68,5 +68,31 @@ public class UserDaoImpIntegrationTests {
         // 2. Assert that the users were retrieved successfully
         assertThat(users).hasSize(4).containsExactly(newUser1, newUser2, newUser3, newUser4);
     }
+    @Test
+    public void testThatUserCanBeUpdated() {
+        // 1. Create a new user
+        User newUser = User.builder()
+                .id(5)
+                .name("Josh")
+                .email("josh@example.com")
+                .build();
+        underTest.create(newUser);
 
+        // 2. Update the user
+        User updatedUser = User.builder()
+                .id(5)
+                .name("Joshua")
+                .email("joshua@example.org")
+                .build();
+
+        underTest.update(updatedUser);
+
+        // 3. Retrieve the updated user
+        Optional<User> userRetrieved = underTest.findOne(5L);
+
+        // 4. Assert that the user was updated
+
+        assertThat(userRetrieved).isPresent();
+        assertThat(userRetrieved.get().getName()).isEqualTo("Joshua");
+    }
 }

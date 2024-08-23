@@ -39,6 +39,34 @@ public class BookDaoImpIntegrationTests {
         assertThat(bookRetrieved.get().getTitle()).isEqualTo("The Great Gatsby");
     }
     @Test
+    public void testThatBookCanBeUpdated() {
+        // 1. Create a new book
+        Book newBook = Book.builder()
+                .title("The Great Gatsby")
+                .author("F. Scott Fitzgerald")
+                .user_id(1L)
+                .build();
+        underTest.create(newBook);
+
+        // 2. Update the book
+        Book updatedBook = Book.builder()
+                .id(1L)
+                .title("The Great Gatsby")
+                .author("F. Scott Fitzgerald")
+                .user_id(2L)
+                .build();
+        underTest.update(updatedBook);
+
+        // 3. Retrieve the updated book
+        Optional<Book> bookRetrieved = underTest.findOne("The Great Gatsby");
+
+        // 4. Assert that the book was updated
+        assertThat(bookRetrieved).isPresent();
+        assertThat(bookRetrieved.get().getUser_id()).isEqualTo(2L);
+    }
+
+
+    @Test
     public void testThatAllBooksCanBeRetrieved() {
         // Create users
         userDaoImpl.create(User.builder()
