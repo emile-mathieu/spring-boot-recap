@@ -70,6 +70,14 @@ public class UserDaoImplTests {
                 eq("Emile"), eq("emile@example.com"), eq(1L)
         );
     }
+    @Test
+    public void testThatDeletesUserGeneratedSql() {
+        underTest.delete(1L);
+        verify(template).update(
+                eq("DELETE FROM users WHERE id = ?"),
+                eq(1L)
+        );
+    }
 
     @Test
     public void testFindOneUnknownUser() {

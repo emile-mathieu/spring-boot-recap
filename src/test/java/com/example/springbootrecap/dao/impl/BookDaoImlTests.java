@@ -62,6 +62,15 @@ public class BookDaoImlTests {
                 eq("Living in Singapore"), eq("Emile"), eq(2L), eq(1L)
         );
     }
+    @Test void testThatDeletesBookGeneratedSQL() {
+        // Act
+        underTest.delete(1L);
+        // Assert
+        verify(template).update(
+                eq("DELETE FROM books WHERE id = ?"),
+                eq(1L)
+        );
+    }
     @Test
     public void testThatFindsOneBook(){
         Book mockBook = new Book(1L, "Living in Singapore", "Emile", 2L);

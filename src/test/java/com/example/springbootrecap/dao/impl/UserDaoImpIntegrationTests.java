@@ -95,4 +95,16 @@ public class UserDaoImpIntegrationTests {
         assertThat(userRetrieved).isPresent();
         assertThat(userRetrieved.get().getName()).isEqualTo("Joshua");
     }
+    @Test public void testUserCanBeDeleted(){
+        // 1. Create a new user
+        User newUser = User.builder()
+                .id(6)
+                .name("Josh")
+                .email("josh@example.com")
+                .build();
+
+        underTest.create(newUser);
+        underTest.delete(6L);
+        assertThat(underTest.findOne(6L)).isEmpty();
+        }
 }

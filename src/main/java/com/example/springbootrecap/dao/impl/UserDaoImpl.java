@@ -33,6 +33,14 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
+    public void delete(Long id) {
+        template.update(
+                "DELETE FROM users WHERE id = ?",
+                id
+        );
+    }
+
+    @Override
     public Optional<User> findOne(Long id) {
         try {
             User user = template.queryForObject(

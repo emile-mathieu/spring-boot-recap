@@ -64,7 +64,25 @@ public class BookDaoImpIntegrationTests {
         assertThat(bookRetrieved).isPresent();
         assertThat(bookRetrieved.get().getUser_id()).isEqualTo(2L);
     }
+    @Test
+    public void testThatBookCanBeDeleted() {
+        // 1. Create a new book
+        Book newBook = Book.builder()
+                .title("The Great Gatsby")
+                .author("F. Scott Fitzgerald")
+                .user_id(1L)
+                .build();
+        underTest.create(newBook);
 
+        // 2. Delete the book
+        underTest.delete(1L);
+
+        // 3. Retrieve the book
+        Optional<Book> bookRetrieved = underTest.findOne("The Great Gatsby");
+
+        // 4. Assert that the book was deleted
+        assertThat(bookRetrieved).isEmpty();
+    }
 
     @Test
     public void testThatAllBooksCanBeRetrieved() {
