@@ -24,6 +24,22 @@ public class BookDaoImpl implements BookDao {
     }
 
     @Override
+    public void update(Book book) {
+        template.update(
+                "UPDATE books SET title = ?, author = ?, user_id = ? WHERE id = ?",
+                book.getTitle(), book.getAuthor(), book.getUser_id(), book.getId()
+        );
+    }
+
+    @Override
+    public void delete(Long id) {
+        template.update(
+                "DELETE FROM books WHERE id = ?",
+                id
+        );
+    }
+
+    @Override
     public Optional<Book> findOne(String title) {
         try{
             Book book = template.queryForObject("SELECT id, title, author, user_id FROM books WHERE title = ?",
