@@ -24,6 +24,7 @@ public class UserRepositoryIntegrationTests {
         User newUser = User.builder()
                 .id(1L)
                 .name("Josh")
+                .age(22)
                 .email("josh@example.com")
                 .build();
         underTest.save(newUser);
@@ -37,21 +38,25 @@ public class UserRepositoryIntegrationTests {
         User newUser1 = User.builder()
                 .id(1)
                 .name("john_doe")
+                .age(25)
                 .email("john@example.com")
                 .build();
         User newUser2 = User.builder()
                 .id(2)
                 .name("bob_smith")
+                .age(30)
                 .email("bob@example.com")
                 .build();
         User newUser3 = User.builder()
                 .id(3)
                 .name("Tom")
+                .age(35)
                 .email("tom.example.com")
                 .build();
         User newUser4 = User.builder()
                 .id(4)
                 .name("Jerry")
+                .age(40)
                 .email("jerry.example.com")
                 .build();
 
@@ -71,6 +76,7 @@ public class UserRepositoryIntegrationTests {
         User newUser = User.builder()
                 .id(1L)
                 .name("Josh")
+                .age(22)
                 .email("josh@example.com")
                 .build();
         underTest.save(newUser);
@@ -90,6 +96,7 @@ public class UserRepositoryIntegrationTests {
         User newUser = User.builder()
                 .id(1L)
                 .name("Josh")
+                .age(22)
                 .email("josh@example.com")
                 .build();
 
@@ -97,4 +104,60 @@ public class UserRepositoryIntegrationTests {
         underTest.delete(newUser);
         assertThat(underTest.findById(newUser.getId())).isEmpty();
     }
+    @Test public void userCanBeFoundByName() {
+        User newUser = User.builder()
+                .id(1L)
+                .name("Josh")
+                .age(22)
+                .email("josh@example.com")
+                .build();
+        underTest.save(newUser);
+        assertThat(underTest.findByName("Josh")).isEqualTo(newUser);
+    }
+    @Test public void usersCanBeFoundByAgeLessThan() {
+        User newUser1 = User.builder()
+                .id(1)
+                .name("john_doe")
+                .age(25)
+                .email("john_doe@example.com")
+                .build();
+        User newUser2 = User.builder()
+                .id(2)
+                .name("Emile")
+                .age(21)
+                .email("emile@example.com")
+                .build();
+        User newUser3 = User.builder()
+                .id(3)
+                .name("Darren")
+                .age(30)
+                .email("darren@example.com")
+                .build();
+
+        underTest.save(newUser1);
+        underTest.save(newUser2);
+        underTest.save(newUser3);
+
+        assertThat(underTest.findByAgeLessThan(30)).containsExactly(newUser1, newUser2);
+    }
+    @Test public void usersCanBeFoundByAgeGreaterThan() {
+        User newUser1 = User.builder()
+                .id(1)
+                .name("john_doe")
+                .age(25)
+                .email("jhon_doe@example.com")
+                .build();
+        User newUser2 = User.builder()
+                .id(2)
+                .name("emile")
+                .age(21)
+                .email("emile@example.com")
+                .build();
+
+        underTest.save(newUser1);
+        underTest.save(newUser2);
+
+        assertThat(underTest.findUsersOlderThan(21)).containsExactly(newUser1);
+    }
+
 }

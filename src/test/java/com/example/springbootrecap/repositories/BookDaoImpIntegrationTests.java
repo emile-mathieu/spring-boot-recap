@@ -23,6 +23,7 @@ public class BookDaoImpIntegrationTests {
         User newUser = User.builder()
                 .id(1L)
                 .name("Emile")
+                .age(21)
                 .email("emile@example.com")
                 .build();
         Book newBook = Book.builder()
@@ -42,6 +43,7 @@ public class BookDaoImpIntegrationTests {
         User newUser = User.builder()
                 .id(1L)
                 .name("Emile")
+                .age(21)
                 .email("emile@example.com")
                 .build();
 
@@ -66,6 +68,7 @@ public class BookDaoImpIntegrationTests {
         User newUser = User.builder()
                 .id(1L)
                 .name("Emile")
+                .age(21)
                 .email("emile@example.com")
                 .build();
 
@@ -90,11 +93,13 @@ public class BookDaoImpIntegrationTests {
         User userOne = User.builder()
                 .id(1L)
                 .name("harold")
+                .age(25)
                 .email("harold@example.com")
                 .build();
         User userTwo = User.builder()
                 .id(2L)
                 .name("jane")
+                .age(30)
                 .email("jane@example.com")
                 .build();
 
